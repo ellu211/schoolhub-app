@@ -3,10 +3,16 @@
  */
 
 window.App = {
-  currentRole: 'student',
+  currentRole: 'admin',
 
   init() {
-    this.currentRole = window.appStore.data.activeRole || 'student';
+    this.currentRole = window.appStore.data.activeRole || 'admin';
+    const students = window.appStore.data.users.students || [];
+    if (this.currentRole === 'student' && students.length === 0) {
+      this.currentRole = 'admin';
+      window.appStore.setRole('admin');
+    }
+
     this.setupServiceWorker();
     this.setupNetworkMonitor();
     this.setupRoleSwitcher();
@@ -15,7 +21,7 @@ window.App = {
 
     // Subscribe to store updates
     window.appStore.subscribe(() => {
-      // Re-render current portal when data changes
+      this.renderNavigation();
       this.renderCurrentPortal();
     });
   },
@@ -28,9 +34,9 @@ window.App = {
 
     // Role switch notification
     const roleNames = {
-      student: 'Student / Parent Portal (Nisha Ahmed)',
-      teacher: 'Teacher Portal (Mr. R. Das)',
-      admin: 'Management / Admin Portal'
+      student: 'Student Portal',
+      teacher: 'Teacher Portal',
+      admin: 'Admin Portal'
     };
     toast.info(`Switched to ${roleNames[role]}`);
   },
@@ -42,11 +48,15 @@ window.App = {
     const roleSelect = document.getElementById('global-role-select');
 
     if (roleSelect) {
-      roleSelect.value = this.currentRole;
+      roleSelect.innerHTML = `
+        <option value="student" ${this.currentRole === 'student' ? 'selected' : ''}>Student</option>
+        <option value="teacher" ${this.currentRole === 'teacher' ? 'selected' : ''}>Teacher</option>
+        <option value="admin" ${this.currentRole === 'admin' ? 'selected' : ''}>Admin</option>
+      `;
     }
 
     if (this.currentRole === 'student') {
-      if (roleBadge) roleBadge.textContent = 'STUDENT & PARENT PORTAL';
+      if (roleBadge) roleBadge.textContent = 'STUDENT PORTAL';
       if (sideNav) {
         sideNav.innerHTML = `
           <button class="nav-btn active" data-student-tab="home" onclick="StudentPortal.switchTab('home')">
