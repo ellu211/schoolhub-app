@@ -7,7 +7,34 @@ window.StudentPortal = {
 
   render(container) {
     const student = window.appStore.getActiveStudent();
-    const feeObj = window.appStore.data.fees[student.id] || { total: 0, paid: 0, due: 0, items: [], paymentHistory: [] };
+    if (!student) {
+      container.innerHTML = `
+        <div class="portal-student">
+          <header class="topbar">
+            <div>
+              <div class="crumb">SchoolHub / Student & Parent Portal</div>
+              <h1 id="student-page-title">Student Portal</h1>
+            </div>
+            <div class="top-actions">
+              <button class="btn btn-outline" onclick="App.setRole('admin')">Go to Admin Portal</button>
+            </div>
+          </header>
+          <div class="content-card" style="text-align:center;padding:50px 20px">
+            <div style="font-size:52px;margin-bottom:12px">👩‍🎓</div>
+            <h3 style="margin-bottom:8px">No Students Enrolled Yet</h3>
+            <p class="muted" style="max-width:440px;margin:0 auto 20px">
+              There are currently no student records in the school database. Enrolled students will see their timetables, attendance calendar, homework assignments, fee invoices, and admit cards here.
+            </p>
+            <button class="btn btn-primary" onclick="App.setRole('admin'); setTimeout(() => AdminPortal.openAddStudentModal(), 150);">
+              + Enroll Student as Admin
+            </button>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    const feeObj = (window.appStore.data.fees && window.appStore.data.fees[student.id]) || { total: 0, paid: 0, due: 0, items: [], paymentHistory: [] };
 
     container.innerHTML = `
       <div class="portal-student">
