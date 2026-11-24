@@ -41,15 +41,15 @@
         <div>SchoolHub</div>
       </div>
 
-      <div class="role-badge" id="sidebar-role-badge">STUDENT &amp; PARENT PORTAL</div>
+      <div class="role-badge" id="sidebar-role-badge">ADMIN &amp; MANAGEMENT PORTAL</div>
 
       <!-- Quick Role Switcher in Sidebar -->
       <div style="padding: 0 8px 14px">
-        <label class="muted small" style="color:#b8d3ea;display:block;margin-bottom:4px">SWITCH ACCOUNT / ROLE:</label>
+        <label class="muted small" style="color:#b8d3ea;display:block;margin-bottom:4px">SWITCH ROLE:</label>
         <select class="form-control" id="global-role-select" style="background:#0c3459;color:#fff;border-color:#2a5e8c;font-size:12px;padding:6px 8px">
-          <option value="student">👩‍🎓 Student: Nisha (Class VIII-B)</option>
-          <option value="teacher">👨‍🏫 Teacher: Mr. R. Das (Math)</option>
-          <option value="admin">🏛️ School Management / Admin</option>
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+          <option value="admin">Admin</option>
         </select>
       </div>
 
@@ -58,11 +58,18 @@
       </nav>
 
       <div class="sidebar-footer">
-        <div><strong>Green Valley High School</strong></div>
+        <div><strong>SchoolHub Academy</strong></div>
         <div style="margin:4px 0">v1.0.0 • Google Play Edition</div>
-        <div style="display:flex;gap:10px;margin-top:6px">
-          <a href="legal/privacy-policy.html">Privacy Policy</a> •
-          <a href="#" onclick="if(confirm('Reset all demo records back to initial state?')) { appStore.reset(); location.reload(); }">Reset Data</a>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+          <button class="btn btn-sm btn-outline" style="background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.25);font-size:11px;padding:5px 8px" onclick="if(confirm('Clear all demo data and start with a fresh blank school database?')) { appStore.clearAllData(); App.setRole('admin'); location.reload(); }">
+            🧹 Clear All Demo Data
+          </button>
+          <button class="btn btn-sm btn-outline" style="background:rgba(255,255,255,0.06);color:#b8d0e3;border-color:rgba(255,255,255,0.15);font-size:11px;padding:5px 8px" onclick="if(confirm('Load sample demo dataset for preview?')) { appStore.loadDemoData(); location.reload(); }">
+            📦 Load Sample Demo Data
+          </button>
+          <div style="margin-top:4px">
+            <a href="legal/privacy-policy.html">Privacy Policy</a>
+          </div>
         </div>
       </div>
     </aside>
