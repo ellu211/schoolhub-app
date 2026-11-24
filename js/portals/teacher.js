@@ -100,6 +100,10 @@ window.TeacherPortal = {
     const contentEl = document.getElementById('teacher-tab-content');
     if (contentEl) {
       const teacher = window.appStore.getActiveTeacher();
+      if (!teacher) {
+        this.render(document.getElementById('portal-root'));
+        return;
+      }
       contentEl.innerHTML = this.getTabHTML(tab, teacher);
       this.attachEvents(document.querySelector('.portal-teacher'), teacher);
     }
@@ -268,8 +272,12 @@ window.TeacherPortal = {
 
   // 2. Attendance Register
   renderAttendanceHTML(teacher) {
-    const students = window.appStore.data.users.students.filter(s => s.class === this.selectedClass);
-    const dateRecords = window.appStore.data.attendance[this.selectedDate] || {};
+    const assignedClasses = (teacher.assignedClasses && teacher.assignedClasses.length) ? teacher.assignedClasses : ['Class VIII-B'];
+    if (!assignedClasses.includes(this.selectedClass)) {
+      this.selectedClass = assignedClasses[0];
+    }
+    const students = (window.appStore.data.users.students || []).filter(s => s.class === this.selectedClass);
+    const dateRecords = (window.appStore.data.attendance && window.appStore.data.attendance[this.selectedDate]) || {};
 
     return `
       <section class="tab-pane active animate-fade">
@@ -281,7 +289,7 @@ window.TeacherPortal = {
             </div>
             <div class="toolbar-actions">
               <select class="form-control" id="teacher-attend-class" onchange="TeacherPortal.changeClass(this.value)">
-                ${teacher.assignedClasses.map(c => `
+                ${assignedClasses.map(c => `
                   <option value="${c}" ${c === this.selectedClass ? 'selected' : ''}>${c}</option>
                 `).join('')}
               </select>
@@ -306,7 +314,9 @@ window.TeacherPortal = {
               </tr>
             </thead>
             <tbody>
-              ${students.map(s => {
+              ${students.length === 0 ? `
+                <tr><td colspan="5" class="text-center muted" style="padding:30px">No students enrolled in ${this.selectedClass}. Please enroll students in the Admin Portal.</td></tr>
+              ` : students.map(s => {
                 const status = dateRecords[s.id] || 'Present';
                 let tagCls = 'tag-green';
                 if (status === 'Absent') tagCls = 'tag-red';
@@ -317,7 +327,7 @@ window.TeacherPortal = {
                     <td><strong>${s.roll}</strong></td>
                     <td>
                       <div class="student-mini-cell">
-                        <span>${s.avatar}</span>
+                        <span>${s.avatar || '🧑‍🎓'}</span>
                         <div>
                           <strong>${s.name}</strong>
                           <div class="muted small">${s.id}</div>
