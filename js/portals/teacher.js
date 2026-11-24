@@ -9,6 +9,32 @@ window.TeacherPortal = {
 
   render(container) {
     const teacher = window.appStore.getActiveTeacher();
+    if (!teacher) {
+      container.innerHTML = `
+        <div class="portal-teacher">
+          <header class="topbar">
+            <div>
+              <div class="crumb">SchoolHub / Teacher Portal</div>
+              <h1 id="teacher-page-title">Teacher Portal</h1>
+            </div>
+            <div class="top-actions">
+              <button class="btn btn-outline" onclick="App.setRole('admin')">Go to Admin Portal</button>
+            </div>
+          </header>
+          <div class="content-card" style="text-align:center;padding:50px 20px">
+            <div style="font-size:52px;margin-bottom:12px">👨‍🏫</div>
+            <h3 style="margin-bottom:8px">No Faculty Members Registered Yet</h3>
+            <p class="muted" style="max-width:440px;margin:0 auto 20px">
+              There are currently no teachers registered in the school faculty directory. Registered teachers can mark daily classroom attendance, publish assignments, review student submissions, and communicate with parents.
+            </p>
+            <button class="btn btn-primary" onclick="App.setRole('admin'); setTimeout(() => AdminPortal.openAddStaffModal(), 150);">
+              + Add Staff Member as Admin
+            </button>
+          </div>
+        </div>
+      `;
+      return;
+    }
 
     container.innerHTML = `
       <div class="portal-teacher">
