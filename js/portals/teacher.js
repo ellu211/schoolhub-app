@@ -671,15 +671,16 @@ window.TeacherPortal = {
 
   // 5. Students Directory
   renderStudentsHTML(teacher) {
-    const students = window.appStore.data.users.students.filter(s => s.class === 'Class VIII-B');
+    const assigned = (teacher.assignedClasses && teacher.assignedClasses.length) ? teacher.assignedClasses : ['Class VIII-B'];
+    const students = (window.appStore.data.users.students || []).filter(s => assigned.includes(s.class));
 
     return `
       <section class="tab-pane active animate-fade">
         <div class="content-card">
           <div class="card-header">
             <div>
-              <h3>My Class Roster: Class VIII-B</h3>
-              <p class="muted small">Class Teacher: ${teacher.name} • 32 Students Enrolled</p>
+              <h3>My Class Roster: ${assigned.join(', ')}</h3>
+              <p class="muted small">Faculty: ${teacher.name} • ${students.length} Student(s) Enrolled</p>
             </div>
             <div class="toolbar-actions">
               <input type="text" class="form-control" id="teacher-student-search" placeholder="Search student name or roll..." oninput="TeacherPortal.filterStudents(this.value)">
@@ -698,15 +699,17 @@ window.TeacherPortal = {
               </tr>
             </thead>
             <tbody>
-              ${students.map(s => {
-                const fee = window.appStore.data.fees[s.id];
+              ${students.length === 0 ? `
+                <tr><td colspan="6" class="text-center muted" style="padding:30px">No students enrolled in your assigned classes.</td></tr>
+              ` : students.map(s => {
+                const fee = (window.appStore.data.fees && window.appStore.data.fees[s.id]);
                 const isEligible = fee && fee.due <= 0;
                 return `
                   <tr class="student-search-row">
                     <td><strong>${s.roll}</strong></td>
                     <td>
                       <div class="student-mini-cell">
-                        <span>${s.avatar}</span>
+                        <span>${s.avatar || '🧑‍🎓'}</span>
                         <div>
                           <strong>${s.name}</strong>
                           <div class="muted small">${s.id}</div>
@@ -714,7 +717,7 @@ window.TeacherPortal = {
                       </div>
                     </td>
                     <td>${s.parentName} (${s.parentPhone})</td>
-                    <td><span class="tag tag-green">${s.attendanceRate}%</span></td>
+                    <td><span class="tag tag-green">${s.attendanceRate || 100}%</span></td>
                     <td>
                       <span class="tag ${isEligible ? 'tag-green' : 'tag-red'}">${isEligible ? 'Eligible' : 'Fee Pending'}</span>
                     </td>
