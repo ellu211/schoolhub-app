@@ -684,6 +684,96 @@ class Store {
     this.save();
     return newTeacher;
   }
+
+  // Delete / Remove Student (Admin)
+  deleteStudent(studentId) {
+    if (!this.data.users.students) return false;
+    const index = this.data.users.students.findIndex(s => s.id === studentId);
+    if (index === -1) return false;
+
+    const removed = this.data.users.students.splice(index, 1)[0];
+
+    // Clean up fee record
+    if (this.data.fees && this.data.fees[studentId]) {
+      delete this.data.fees[studentId];
+    }
+
+    // Clean up results
+    if (this.data.results && this.data.results[studentId]) {
+      delete this.data.results[studentId];
+    }
+
+    // Clean up attendance records
+    if (this.data.attendance) {
+      Object.keys(this.data.attendance).forEach(date => {
+        if (this.data.attendance[date] && this.data.attendance[date][studentId]) {
+          delete this.data.attendance[date][studentId];
+        }
+      });
+    }
+
+    // Clean up submissions
+    if (this.data.submissions) {
+      this.data.submissions = this.data.submissions.filter(sub => sub.studentId !== studentId);
+    }
+
+    // Clean up leaves
+    if (this.data.leaves) {
+      this.data.leaves = this.data.leaves.filter(l => l.studentId !== studentId);
+    }
+
+    // Clean up library
+    if (this.data.library) {
+      this.data.library = this.data.library.filter(lib => lib.studentId !== studentId);
+    }
+
+    // Clean up consent forms
+    if (this.data.consentForms) {
+      this.data.consentForms = this.data.consentForms.filter(c => c.studentId !== studentId);
+    }
+
+    // Update active student id if needed
+    if (this.data.activeStudentId === studentId) {
+      this.data.activeStudentId = this.data.users.students.length ? this.data.users.students[0].id : null;
+    }
+
+    this.save();
+    return removed;
+  }
+
+  // Delete / Remove Teacher / Staff (Admin)
+  deleteStaff(teacherId) {
+    if (!this.data.users.teachers) return false;
+    const index = this.data.users.teachers.findIndex(t => t.id === teacherId);
+    if (index === -1) return false;
+
+    const removed = this.data.users.teachers.splice(index, 1)[0];
+
+    if (this.data.activeTeacherId === teacherId) {
+      this.data.activeTeacherId = this.data.users.teachers.length ? this.data.users.teachers[0].id : null;
+    }
+
+    this.save();
+    return removed;
+  }
+
+  // Update Student details
+  updateStudent(studentId, updatedData) {
+    const student = (this.data.users.students || []).find(s => s.id === studentId);
+    if (!student) return null;
+    Object.assign(student, updatedData);
+    this.save();
+    return student;
+  }
+
+  // Update Staff details
+  updateStaff(teacherId, updatedData) {
+    const teacher = (this.data.users.teachers || []).find(t => t.id === teacherId);
+    if (!teacher) return null;
+    Object.assign(teacher, updatedData);
+    this.save();
+    return teacher;
+  }
 }
 
 // Global singleton instance
