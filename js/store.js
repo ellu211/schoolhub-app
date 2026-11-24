@@ -1,15 +1,58 @@
 /**
  * SchoolHub - Core Data Store & State Management
- * Persistent reactive store backed by localStorage with full mock seed data.
+ * Clean Production Slate with optional Demo Data loader
  */
 
-const STORAGE_KEY = 'schoolhub_data_v1';
+const STORAGE_KEY = 'schoolhub_data_v2';
 
-const defaultSeedData = {
-  activeRole: 'student', // 'student', 'teacher', 'admin'
-  activeStudentId: 'EDU-054', // default active student (Nisha Ahmed)
-  activeTeacherId: 'TCH-012', // Mr. R. Das
-  
+// 1. Clean Blank State (Default: All Demo Data Cleared)
+const blankInitialData = {
+  activeRole: 'admin',
+  activeStudentId: null,
+  activeTeacherId: null,
+
+  users: {
+    students: [],
+    teachers: [],
+    admin: {
+      id: 'ADM-001',
+      name: 'School Administrator',
+      title: 'Principal & Operations Desk',
+      school: 'SchoolHub Academy',
+      email: 'admin@schoolhub.app',
+      phone: '+91 361 245 9000',
+      avatar: '🏛️'
+    }
+  },
+
+  periods: [
+    { period: 1, time: '08:30–09:10', subject: 'Period 1', teacher: '—', room: 'Room 1', icon: '📐' },
+    { period: 2, time: '09:10–09:50', subject: 'Period 2', teacher: '—', room: 'Room 1', icon: '📘' },
+    { period: 3, time: '09:50–10:30', subject: 'Period 3', teacher: '—', room: 'Room 1', icon: '🔬' },
+    { period: 4, time: '10:30–11:00', subject: 'Recess', teacher: 'Break time', room: 'Campus', icon: '☕', isBreak: true },
+    { period: 5, time: '11:00–11:40', subject: 'Period 4', teacher: '—', room: 'Room 1', icon: '🌍' },
+    { period: 6, time: '11:40–12:20', subject: 'Period 5', teacher: '—', room: 'Room 1', icon: '📖' },
+    { period: 7, time: '12:20–01:00', subject: 'Period 6', teacher: '—', room: 'Room 1', icon: '💻' }
+  ],
+
+  attendance: {},
+  homework: [],
+  submissions: [],
+  fees: {},
+  results: {},
+  notices: [],
+  leaves: [],
+  library: [],
+  consentForms: [],
+  messages: []
+};
+
+// 2. Sample Demo Dataset (Preserved for previewing if user requests demo restore)
+const sampleDemoData = {
+  activeRole: 'student',
+  activeStudentId: 'EDU-054',
+  activeTeacherId: 'TCH-012',
+
   users: {
     students: [
       {
@@ -62,40 +105,6 @@ const defaultSeedData = {
         academicYear: '2026–27',
         attendanceRate: 96,
         schoolName: 'Green Valley High School'
-      },
-      {
-        id: 'EDU-056',
-        name: 'Rohan Das',
-        class: 'Class VIII-B',
-        roll: '03',
-        parentName: 'Bikash Das',
-        parentPhone: '+91 98444 55667',
-        dob: '18 November 2012',
-        bloodGroup: 'AB+',
-        address: '8 Zoo Road, Guwahati',
-        avatar: '👦',
-        classTeacher: 'Mr. R. Das',
-        room: 'Room 4',
-        academicYear: '2026–27',
-        attendanceRate: 88,
-        schoolName: 'Green Valley High School'
-      },
-      {
-        id: 'EDU-057',
-        name: 'Priya Bora',
-        class: 'Class VIII-B',
-        roll: '04',
-        parentName: 'Sunil Bora',
-        parentPhone: '+91 98333 44556',
-        dob: '30 January 2012',
-        bloodGroup: 'B+',
-        address: '27 Christian Basti, Guwahati',
-        avatar: '👧',
-        classTeacher: 'Mr. R. Das',
-        room: 'Room 4',
-        academicYear: '2026–27',
-        attendanceRate: 94,
-        schoolName: 'Green Valley High School'
       }
     ],
     teachers: [
@@ -114,41 +123,11 @@ const defaultSeedData = {
         id: 'TCH-015',
         name: 'Ms. P. Sharma',
         subject: 'General Science',
-        assignedClasses: ['Class VII-B', 'Class VIII-B', 'Class IX-A'],
+        assignedClasses: ['Class VII-B', 'Class VIII-B'],
         phone: '+91 94350 33445',
         email: 'p.sharma@greenvalley.edu',
         room: 'Lab 2',
         avatar: '👩‍🏫'
-      },
-      {
-        id: 'TCH-018',
-        name: 'Ms. J. Bora',
-        subject: 'English',
-        assignedClasses: ['Class VIII-A', 'Class VIII-B'],
-        phone: '+91 94350 55667',
-        email: 'j.bora@greenvalley.edu',
-        room: 'Room 3',
-        avatar: '👩‍🏫'
-      },
-      {
-        id: 'TCH-022',
-        name: 'Mr. A. Dutta',
-        subject: 'Social Science',
-        assignedClasses: ['Class VIII-B', 'Class IX-B'],
-        phone: '+91 94350 77889',
-        email: 'a.dutta@greenvalley.edu',
-        room: 'Room 5',
-        avatar: '👨‍🏫'
-      },
-      {
-        id: 'TCH-025',
-        name: 'Mr. K. Nath',
-        subject: 'Computer Studies',
-        assignedClasses: ['Class VIII-B', 'Class IX-A', 'Class X-A'],
-        phone: '+91 94350 99001',
-        email: 'k.nath@greenvalley.edu',
-        room: 'Comp Lab 1',
-        avatar: '👨‍💻'
       }
     ],
     admin: {
@@ -168,69 +147,14 @@ const defaultSeedData = {
     { period: 3, time: '09:50–10:30', subject: 'General Science', teacher: 'Ms. P. Sharma', room: 'Lab 2', icon: '🔬' },
     { period: 4, time: '10:30–11:00', subject: 'Recess', teacher: 'Break time', room: 'Campus', icon: '☕', isBreak: true },
     { period: 5, time: '11:00–11:40', subject: 'Social Science', teacher: 'Mr. A. Dutta', room: 'Room 4', icon: '🌍' },
-    { period: 6, time: '11:40–12:20', subject: 'Assamese / Hindi', teacher: 'Ms. M. Saikia', room: 'Room 4', icon: '📖' },
-    { period: 7, time: '12:20–01:00', subject: 'Computer Studies', teacher: 'Mr. K. Nath', room: 'Comp Lab 1', icon: '💻' }
+    { period: 6, time: '11:40–12:20', subject: 'Language', teacher: 'Ms. M. Saikia', room: 'Room 4', icon: '📖' },
+    { period: 7, time: '12:20–01:00', subject: 'Computer Studies', teacher: 'Mr. K. Nath', room: 'Comp Lab', icon: '💻' }
   ],
 
-  // Attendance by date & student
   attendance: {
-    '2026-11-09': {
-      'EDU-054': 'Present',
-      'EDU-055': 'Present',
-      'EDU-056': 'Absent',
-      'EDU-057': 'Present'
-    },
-    '2026-11-08': {
-      'EDU-054': 'Present',
-      'EDU-055': 'Present',
-      'EDU-056': 'Present',
-      'EDU-057': 'Present'
-    },
-    '2026-11-07': {
-      'EDU-054': 'Present',
-      'EDU-055': 'Present',
-      'EDU-056': 'Present',
-      'EDU-057': 'Present'
-    },
-    '2026-11-06': {
-      'EDU-054': 'Present',
-      'EDU-055': 'Absent',
-      'EDU-056': 'Present',
-      'EDU-057': 'Present'
-    },
-    '2026-11-05': {
-      'EDU-054': 'Leave',
-      'EDU-055': 'Present',
-      'EDU-056': 'Present',
-      'EDU-057': 'Present'
-    },
-    '2026-11-04': {
-      'EDU-054': 'Present',
-      'EDU-055': 'Present',
-      'EDU-056': 'Absent',
-      'EDU-057': 'Present'
-    },
-    '2026-11-03': {
-      'EDU-054': 'Present',
-      'EDU-055': 'Present',
-      'EDU-056': 'Present',
-      'EDU-057': 'Present'
-    },
-    '2026-11-02': {
-      'EDU-054': 'Absent',
-      'EDU-055': 'Present',
-      'EDU-056': 'Present',
-      'EDU-057': 'Present'
-    },
-    '2026-11-01': {
-      'EDU-054': 'Present',
-      'EDU-055': 'Present',
-      'EDU-056': 'Present',
-      'EDU-057': 'Present'
-    }
+    '2026-11-09': { 'EDU-054': 'Present', 'EDU-055': 'Present' }
   },
 
-  // Homework assignments created by teachers
   homework: [
     {
       id: 'HW-101',
@@ -240,99 +164,15 @@ const defaultSeedData = {
       teacher: 'Mr. R. Das',
       assignedDate: '2026-11-08',
       dueDate: '2026-11-10',
-      description: 'Solve problems from Exercise 4.2 (Questions 1 to 10). Show clear step-by-step working and verify your solution.',
+      description: 'Solve problems from Exercise 4.2. Verify your answers.',
       attachmentName: 'Exercise 4.2.pdf',
       attachmentSize: '480 KB',
       status: 'Published'
-    },
-    {
-      id: 'HW-102',
-      class: 'Class VIII-B',
-      subject: 'General Science',
-      title: 'Photosynthesis & Plant Respiration',
-      teacher: 'Ms. P. Sharma',
-      assignedDate: '2026-11-07',
-      dueDate: '2026-11-12',
-      description: 'Complete the attached worksheet on chlorophyll pigments, light reaction vs Calvin cycle. Draw labeled diagrams.',
-      attachmentName: 'Worksheet_Photosynthesis.docx',
-      attachmentSize: '720 KB',
-      status: 'Published'
-    },
-    {
-      id: 'HW-103',
-      class: 'Class VIII-B',
-      subject: 'English',
-      title: 'Paragraph Writing: Environmental Conservation',
-      teacher: 'Ms. J. Bora',
-      assignedDate: '2026-11-06',
-      dueDate: '2026-11-13',
-      description: 'Write an essay of 250 words describing urgent steps needed to reduce plastic pollution in local wetlands.',
-      attachmentName: 'Writing_Guidelines.pdf',
-      attachmentSize: '310 KB',
-      status: 'Published'
-    },
-    {
-      id: 'HW-104',
-      class: 'Class IX-A',
-      subject: 'Mathematics',
-      title: 'Algebra Revision & Quadratic Formulas',
-      teacher: 'Mr. R. Das',
-      assignedDate: '2026-11-08',
-      dueDate: '2026-11-14',
-      description: 'Review notes and solve quadratic factoring drill on chapter 3.',
-      attachmentName: 'Algebra_revision_notes.pdf',
-      attachmentSize: '950 KB',
-      status: 'Published'
     }
   ],
 
-  // Student submissions
-  submissions: [
-    {
-      id: 'SUB-201',
-      homeworkId: 'HW-101',
-      studentId: 'EDU-054',
-      studentName: 'Nisha Ahmed',
-      subject: 'Mathematics',
-      submittedDate: '2026-11-09T09:15:00',
-      fileName: 'Nisha_Ahmed_Linear_Eq_Ex4.2.pdf',
-      fileSize: '1.2 MB',
-      comment: 'Sir, I have completed all 10 questions and verified question 7 twice.',
-      status: 'Submitted',
-      grade: null,
-      feedback: null
-    },
-    {
-      id: 'SUB-202',
-      homeworkId: 'HW-101',
-      studentId: 'EDU-055',
-      studentName: 'Aarav Sharma',
-      subject: 'Mathematics',
-      submittedDate: '2026-11-09T08:45:00',
-      fileName: 'Aarav_Math_HW.pdf',
-      fileSize: '890 KB',
-      comment: 'Completed exercises attached.',
-      status: 'Reviewed',
-      grade: 'A',
-      feedback: 'Good work on linear equations. Clean presentation.'
-    },
-    {
-      id: 'SUB-203',
-      homeworkId: 'HW-103',
-      studentId: 'EDU-054',
-      studentName: 'Nisha Ahmed',
-      subject: 'English',
-      submittedDate: '2026-11-08T18:20:00',
-      fileName: 'Nisha_Conservation_Essay.pdf',
-      fileSize: '410 KB',
-      comment: 'Draft attached for review.',
-      status: 'Submitted',
-      grade: null,
-      feedback: null
-    }
-  ],
+  submissions: [],
 
-  // Fee records per student
   fees: {
     'EDU-054': {
       total: 8000,
@@ -340,71 +180,25 @@ const defaultSeedData = {
       due: 2500,
       items: [
         { id: 'FEE-1', name: 'Tuition Fee (Term 2)', amount: 5000, status: 'Paid', receiptNo: 'REC-2026-881', date: '05 Oct 2026' },
-        { id: 'FEE-2', name: 'Development & Sports Fee', amount: 1500, status: 'Paid', receiptNo: 'REC-2026-881', date: '05 Oct 2026' },
-        { id: 'FEE-3', name: 'Term Fee Balance (Term 2)', amount: 2500, status: 'Due', dueDate: '20 Nov 2026' }
+        { id: 'FEE-2', name: 'Development Fee', amount: 1500, status: 'Paid', receiptNo: 'REC-2026-881', date: '05 Oct 2026' },
+        { id: 'FEE-3', name: 'Term Fee Balance', amount: 2500, status: 'Due', dueDate: '20 Nov 2026' }
       ],
       paymentHistory: [
         {
           id: 'TXN-7721',
           date: '05 Oct 2026, 11:30 AM',
           amount: 5500,
-          method: 'Online UPI (SBI)',
+          method: 'Online UPI',
           receiptNo: 'REC-2026-881',
           status: 'Success',
           notes: 'Tuition + Development fee'
         }
       ],
-      admitEligibility: 'Not Eligible', // 'Eligible' when due === 0
+      admitEligibility: 'Not Eligible',
       admitEligibleReason: 'Pending balance ₹2,500'
-    },
-    'EDU-055': {
-      total: 8000,
-      paid: 8000,
-      due: 0,
-      items: [
-        { id: 'FEE-1', name: 'Tuition Fee (Term 2)', amount: 5000, status: 'Paid', receiptNo: 'REC-2026-750', date: '12 Sep 2026' },
-        { id: 'FEE-2', name: 'Development Fee', amount: 1500, status: 'Paid', receiptNo: 'REC-2026-750', date: '12 Sep 2026' },
-        { id: 'FEE-3', name: 'Term Fee Balance', amount: 1500, status: 'Paid', receiptNo: 'REC-2026-750', date: '12 Sep 2026' }
-      ],
-      paymentHistory: [
-        {
-          id: 'TXN-6612',
-          date: '12 Sep 2026, 02:15 PM',
-          amount: 8000,
-          method: 'Bank Transfer (HDFC)',
-          receiptNo: 'REC-2026-750',
-          status: 'Success',
-          notes: 'Full Term 2 payment'
-        }
-      ],
-      admitEligibility: 'Eligible',
-      admitEligibleReason: 'All dues cleared'
-    },
-    'EDU-102': {
-      total: 6500,
-      paid: 6500,
-      due: 0,
-      items: [
-        { id: 'FEE-1', name: 'Primary Tuition Fee', amount: 4500, status: 'Paid', receiptNo: 'REC-2026-904', date: '01 Oct 2026' },
-        { id: 'FEE-2', name: 'Activities & Library', amount: 2000, status: 'Paid', receiptNo: 'REC-2026-904', date: '01 Oct 2026' }
-      ],
-      paymentHistory: [
-        {
-          id: 'TXN-9044',
-          date: '01 Oct 2026, 10:00 AM',
-          amount: 6500,
-          method: 'Counter Cash Receipt',
-          receiptNo: 'REC-2026-904',
-          status: 'Success',
-          notes: 'Full fee paid at school counter'
-        }
-      ],
-      admitEligibility: 'Eligible',
-      admitEligibleReason: 'All dues cleared'
     }
   },
 
-  // Academic Examination Results
   results: {
     'EDU-054': {
       exams: [
@@ -416,37 +210,14 @@ const defaultSeedData = {
           subjects: [
             { subject: 'Mathematics', marks: 44, max: 50, grade: 'A' },
             { subject: 'English', marks: 41, max: 50, grade: 'A' },
-            { subject: 'General Science', marks: 39, max: 50, grade: 'B+' },
-            { subject: 'Social Science', marks: 43, max: 50, grade: 'A' },
-            { subject: 'Computer Studies', marks: 46, max: 50, grade: 'A+' }
+            { subject: 'General Science', marks: 39, max: 50, grade: 'B+' }
           ]
-        },
-        {
-          title: 'Half-Yearly Examination',
-          publishedDate: '20 Oct 2026',
-          overallPercentage: 86.4,
-          grade: 'A',
-          subjects: [
-            { subject: 'Mathematics', marks: 88, max: 100, grade: 'A' },
-            { subject: 'English', marks: 85, max: 100, grade: 'A' },
-            { subject: 'General Science', marks: 84, max: 100, grade: 'A' },
-            { subject: 'Social Science', marks: 87, max: 100, grade: 'A' },
-            { subject: 'Assamese / Hindi', marks: 82, max: 100, grade: 'A' },
-            { subject: 'Computer Studies', marks: 92, max: 100, grade: 'A+' }
-          ]
-        },
-        {
-          title: 'Unit Test 2',
-          publishedDate: null,
-          status: 'Awaiting',
-          scheduledDate: '24 Nov 2026'
         }
       ],
-      teacherRemarks: 'Nisha is regular in class and shows good improvement in Mathematics. Keep participating in classroom discussions and scientific project work.'
+      teacherRemarks: 'Good performance in Mathematics and Science.'
     }
   },
 
-  // Notices and circulars
   notices: [
     {
       id: 'NOT-301',
@@ -455,136 +226,15 @@ const defaultSeedData = {
       category: 'Event',
       date: '08 Nov 2026',
       author: 'School Management',
-      content: 'The Annual Sports Day will be held on Saturday, 28 November 2026 at the Main Athletics Ground. Students participating in track, field, and team events should report to their house teachers by 12 November for trial registrations.',
+      content: 'The Annual Sports Day will be held on Saturday, 28 November 2026.',
       pinned: true
-    },
-    {
-      id: 'NOT-302',
-      title: 'Parent-Teacher Meeting (PTM)',
-      audience: 'Whole school',
-      category: 'Circular',
-      date: '06 Nov 2026',
-      author: "Principal's Office",
-      content: 'A mandatory Parent-Teacher Meeting is scheduled for Saturday, 14 November 2026 from 10:00 AM to 01:00 PM. Parents can discuss Half-Yearly examination progress and upcoming board/unit test strategies.',
-      pinned: true
-    },
-    {
-      id: 'NOT-303',
-      title: 'Library Book Return Reminder',
-      audience: 'Whole school',
-      category: 'Notice',
-      date: '05 Nov 2026',
-      author: 'Central Library',
-      content: 'All books issued for the Half-Yearly recess must be returned or re-issued by Thursday, 12 November to avoid overdue fines.',
-      pinned: false
-    },
-    {
-      id: 'NOT-304',
-      title: 'Mathematics Remedial Class for VIII-B',
-      audience: 'Class VIII-B',
-      category: 'Class Notice',
-      date: '09 Nov 2026',
-      author: 'Mr. R. Das',
-      content: 'Special doubt-clearing session for Chapter 4 (Linear Equations) will be conducted on Wednesday from 02:00 PM to 03:00 PM in Room 4.',
-      pinned: false
     }
   ],
 
-  // Leave applications
-  leaves: [
-    {
-      id: 'LEV-501',
-      studentId: 'EDU-054',
-      studentName: 'Nisha Ahmed',
-      class: 'Class VIII-B',
-      fromDate: '2026-11-16',
-      toDate: '2026-11-17',
-      reason: 'Family wedding function in Jorhat. Requesting leave for 2 days.',
-      submittedDate: '2026-11-09',
-      status: 'Pending',
-      remarks: null
-    },
-    {
-      id: 'LEV-502',
-      studentId: 'EDU-056',
-      studentName: 'Rohan Das',
-      class: 'Class VIII-B',
-      fromDate: '2026-11-04',
-      toDate: '2026-11-04',
-      reason: 'Fever and doctor visit.',
-      submittedDate: '2026-11-04',
-      status: 'Approved',
-      remarks: 'Approved by Class Teacher'
-    }
-  ],
-
-  // Library transactions
-  library: [
-    {
-      id: 'LIB-1',
-      studentId: 'EDU-054',
-      bookTitle: 'A Brief History of Time - Stephen Hawking',
-      isbn: '978-0553380163',
-      issueDate: '28 Oct 2026',
-      dueDate: '12 Nov 2026',
-      status: 'Borrowed'
-    },
-    {
-      id: 'LIB-2',
-      studentId: 'EDU-054',
-      bookTitle: 'Mathematics for Young Minds - R.S. Aggarwal',
-      isbn: '978-8177099231',
-      issueDate: '15 Oct 2026',
-      dueDate: '29 Oct 2026',
-      status: 'Returned'
-    }
-  ],
-
-  // Consent forms
-  consentForms: [
-    {
-      id: 'CON-1',
-      studentId: 'EDU-054',
-      title: 'Regional Science Museum Educational Tour',
-      eventDate: '18 Nov 2026',
-      destination: 'Khanapara Science Park',
-      fee: '₹200 (Transport & Entry)',
-      status: 'Pending Consent',
-      parentNotes: ''
-    },
-    {
-      id: 'CON-2',
-      studentId: 'EDU-055',
-      title: 'Inter-School Sports Meet Transport Permission',
-      eventDate: '28 Nov 2026',
-      destination: 'Sarusajai Stadium',
-      fee: 'Free',
-      status: 'Approved',
-      parentNotes: 'Permitted to travel by school sports bus.'
-    }
-  ],
-
-  // Messages / Communication
-  messages: [
-    {
-      id: 'MSG-1',
-      sender: 'School Office',
-      senderRole: 'admin',
-      recipientId: 'TCH-012',
-      recipientName: 'Mr. R. Das',
-      date: '09 Nov 2026, 09:30 AM',
-      text: 'Please submit the monthly progress remarks for Class VIII-B by this Friday afternoon.'
-    },
-    {
-      id: 'MSG-2',
-      sender: 'Farida Ahmed (Parent)',
-      senderRole: 'parent',
-      recipientId: 'TCH-012',
-      recipientName: 'Mr. R. Das',
-      date: '08 Nov 2026, 06:15 PM',
-      text: 'Good evening Sir. Nisha was absent on Monday due to tooth pain. We have submitted the medical note.'
-    }
-  ]
+  leaves: [],
+  library: [],
+  consentForms: [],
+  messages: []
 };
 
 class Store {
@@ -600,9 +250,10 @@ class Store {
         return JSON.parse(saved);
       }
     } catch (e) {
-      console.warn('Could not read from localStorage, using seed defaults', e);
+      console.warn('Could not read from localStorage, using blank initial state', e);
     }
-    return JSON.parse(JSON.stringify(defaultSeedData));
+    // Default: Clean Blank Slate (all demo data cleared)
+    return JSON.parse(JSON.stringify(blankInitialData));
   }
 
   save() {
@@ -614,9 +265,25 @@ class Store {
     this.notify();
   }
 
-  reset() {
-    this.data = JSON.parse(JSON.stringify(defaultSeedData));
+  // Clear all demo data completely
+  clearAllData() {
+    this.data = JSON.parse(JSON.stringify(blankInitialData));
     this.save();
+    try {
+      localStorage.removeItem('schoolhub_data_v1');
+    } catch (e) {}
+    return this.data;
+  }
+
+  // Restore sample demo dataset (if user requests)
+  loadDemoData() {
+    this.data = JSON.parse(JSON.stringify(sampleDemoData));
+    this.save();
+    return this.data;
+  }
+
+  reset() {
+    this.clearAllData();
   }
 
   subscribe(callback) {
@@ -647,16 +314,23 @@ class Store {
     this.save();
   }
 
+  setActiveTeacher(teacherId) {
+    this.data.activeTeacherId = teacherId;
+    this.save();
+  }
+
   getActiveStudent() {
+    if (!this.data.users.students || !this.data.users.students.length) return null;
     return this.data.users.students.find(s => s.id === this.data.activeStudentId) || this.data.users.students[0];
   }
 
   getActiveTeacher() {
+    if (!this.data.users.teachers || !this.data.users.teachers.length) return null;
     return this.data.users.teachers.find(t => t.id === this.data.activeTeacherId) || this.data.users.teachers[0];
   }
 
   getAdmin() {
-    return this.data.users.admin;
+    return this.data.users.admin || blankInitialData.users.admin;
   }
 
   // Attendance
@@ -665,8 +339,6 @@ class Store {
       this.data.attendance[dateStr] = {};
     }
     this.data.attendance[dateStr][studentId] = status;
-    
-    // Recalculate attendance percentage
     this.recalculateAttendance(studentId);
     this.save();
   }
@@ -676,8 +348,7 @@ class Store {
       this.data.attendance[dateStr] = {};
     }
     Object.assign(this.data.attendance[dateStr], classRecords);
-    
-    // Recalculate all affected students
+
     Object.keys(classRecords).forEach(studentId => {
       this.recalculateAttendance(studentId);
     });
@@ -695,7 +366,7 @@ class Store {
       }
     });
 
-    const student = this.data.users.students.find(s => s.id === studentId);
+    const student = (this.data.users.students || []).find(s => s.id === studentId);
     if (student && totalDays > 0) {
       student.attendanceRate = Math.round((presentDays / totalDays) * 100);
     }
@@ -707,12 +378,13 @@ class Store {
 
   // Homework
   addHomework({ title, subject, targetClass, dueDate, description, attachmentName, attachmentSize }) {
+    const teacher = this.getActiveTeacher();
     const newHw = {
       id: 'HW-' + Date.now().toString().slice(-4),
       class: targetClass,
       subject,
       title,
-      teacher: this.getActiveTeacher().name,
+      teacher: teacher ? teacher.name : 'Faculty Member',
       assignedDate: new Date().toISOString().split('T')[0],
       dueDate,
       description,
@@ -727,7 +399,9 @@ class Store {
 
   // Submissions
   submitHomework({ homeworkId, studentId, fileName, fileSize, comment, fileDataUrl }) {
-    const student = this.data.users.students.find(s => s.id === studentId) || this.getActiveStudent();
+    const student = (this.data.users.students || []).find(s => s.id === studentId) || this.getActiveStudent();
+    if (!student) return null;
+
     const hw = this.data.homework.find(h => h.id === homeworkId);
 
     const submission = {
@@ -746,7 +420,6 @@ class Store {
       feedback: null
     };
 
-    // Remove existing if resubmitting
     this.data.submissions = this.data.submissions.filter(
       s => !(s.homeworkId === homeworkId && s.studentId === student.id)
     );
@@ -767,16 +440,19 @@ class Store {
 
   // Fees & Payment
   payFeeOnline(studentId, amount, paymentMethod) {
+    if (!this.data.fees[studentId]) {
+      this.data.fees[studentId] = { total: 0, paid: 0, due: 0, items: [], paymentHistory: [], admitEligibility: 'Eligible', admitEligibleReason: 'Dues cleared' };
+    }
     const feeObj = this.data.fees[studentId];
-    if (!feeObj) return null;
 
     const receiptNo = 'REC-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
     const txnId = 'TXN-' + Math.floor(100000 + Math.random() * 900000);
     const numAmount = Number(amount);
 
-    feeObj.paid += numAmount;
-    feeObj.due = Math.max(0, feeObj.total - feeObj.paid);
+    feeObj.paid = (feeObj.paid || 0) + numAmount;
+    feeObj.due = Math.max(0, (feeObj.total || 0) - feeObj.paid);
 
+    if (!feeObj.paymentHistory) feeObj.paymentHistory = [];
     feeObj.paymentHistory.unshift({
       id: txnId,
       date: new Date().toLocaleString('en-US', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
@@ -787,13 +463,15 @@ class Store {
       notes: 'Online fee payment'
     });
 
-    feeObj.items.forEach(item => {
-      if (item.status === 'Due') {
-        item.status = 'Paid';
-        item.receiptNo = receiptNo;
-        item.date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-      }
-    });
+    if (feeObj.items) {
+      feeObj.items.forEach(item => {
+        if (item.status === 'Due') {
+          item.status = 'Paid';
+          item.receiptNo = receiptNo;
+          item.date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+      });
+    }
 
     if (feeObj.due <= 0) {
       feeObj.admitEligibility = 'Eligible';
@@ -805,16 +483,19 @@ class Store {
   }
 
   recordOfflineFee(studentId, amount, method, refNo, notes) {
+    if (!this.data.fees[studentId]) {
+      this.data.fees[studentId] = { total: 0, paid: 0, due: 0, items: [], paymentHistory: [], admitEligibility: 'Eligible', admitEligibleReason: 'Dues cleared' };
+    }
     const feeObj = this.data.fees[studentId];
-    if (!feeObj) return null;
 
     const receiptNo = refNo || ('OFF-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000));
     const txnId = 'OFF-TXN-' + Math.floor(10000 + Math.random() * 90000);
     const numAmount = Number(amount);
 
-    feeObj.paid += numAmount;
-    feeObj.due = Math.max(0, feeObj.total - feeObj.paid);
+    feeObj.paid = (feeObj.paid || 0) + numAmount;
+    feeObj.due = Math.max(0, (feeObj.total || 0) - feeObj.paid);
 
+    if (!feeObj.paymentHistory) feeObj.paymentHistory = [];
     feeObj.paymentHistory.unshift({
       id: txnId,
       date: new Date().toLocaleString('en-US', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
@@ -825,13 +506,15 @@ class Store {
       notes: notes || 'Offline payment verified at school counter'
     });
 
-    feeObj.items.forEach(item => {
-      if (item.status === 'Due' && feeObj.due <= 0) {
-        item.status = 'Paid';
-        item.receiptNo = receiptNo;
-        item.date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-      }
-    });
+    if (feeObj.items) {
+      feeObj.items.forEach(item => {
+        if (item.status === 'Due' && feeObj.due <= 0) {
+          item.status = 'Paid';
+          item.receiptNo = receiptNo;
+          item.date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+      });
+    }
 
     if (feeObj.due <= 0) {
       feeObj.admitEligibility = 'Eligible';
@@ -861,7 +544,9 @@ class Store {
 
   // Leaves
   applyLeave({ studentId, fromDate, toDate, reason }) {
-    const student = this.data.users.students.find(s => s.id === studentId) || this.getActiveStudent();
+    const student = (this.data.users.students || []).find(s => s.id === studentId) || this.getActiveStudent();
+    if (!student) return null;
+
     const leave = {
       id: 'LEV-' + Date.now().toString().slice(-4),
       studentId: student.id,
@@ -904,9 +589,10 @@ class Store {
     let sender = 'User';
     if (role === 'student') {
       const st = this.getActiveStudent();
-      sender = `${st.parentName} (${st.name}'s Parent)`;
+      sender = st ? `${st.parentName} (${st.name}'s Parent)` : 'Parent';
     } else if (role === 'teacher') {
-      sender = this.getActiveTeacher().name;
+      const tch = this.getActiveTeacher();
+      sender = tch ? tch.name : 'Faculty Member';
     } else {
       sender = 'School Office';
     }
@@ -915,7 +601,7 @@ class Store {
       id: 'MSG-' + Date.now().toString().slice(-4),
       sender,
       senderRole: role,
-      recipientId: recipientId || 'TCH-012',
+      recipientId: recipientId || 'ADM-001',
       recipientName: recipientName || 'Class Teacher',
       date: new Date().toLocaleString('en-US', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
       text
@@ -925,45 +611,78 @@ class Store {
     return msg;
   }
 
-  // Students & Staff management (Admin)
+  // Enroll Student (Admin)
   addStudent(studentData) {
-    const id = 'EDU-' + Math.floor(200 + Math.random() * 800);
+    const id = 'EDU-' + Math.floor(100 + Math.random() * 900);
     const newStudent = {
       id,
       name: studentData.name,
       class: studentData.class || 'Class VIII-B',
-      roll: studentData.roll || '99',
+      roll: studentData.roll || '01',
       parentName: studentData.parentName || 'Parent Name',
       parentPhone: studentData.parentPhone || '+91 90000 00000',
       dob: studentData.dob || '2012-01-01',
       bloodGroup: studentData.bloodGroup || 'A+',
       address: studentData.address || 'Guwahati',
-      avatar: '🧑‍🎓',
-      classTeacher: 'Mr. R. Das',
-      room: 'Room 4',
+      avatar: studentData.avatar || '🧑‍🎓',
+      classTeacher: studentData.classTeacher || 'Assigned Teacher',
+      room: studentData.room || 'Room 1',
       academicYear: '2026–27',
       attendanceRate: 100,
-      schoolName: 'Green Valley High School'
+      schoolName: (this.data.users.admin && this.data.users.admin.school) || 'SchoolHub Academy'
     };
+
+    if (!this.data.users.students) this.data.users.students = [];
     this.data.users.students.push(newStudent);
 
+    // If activeStudentId is empty, select this student
+    if (!this.data.activeStudentId) {
+      this.data.activeStudentId = id;
+    }
+
     // Init fee record
+    if (!this.data.fees) this.data.fees = {};
+    const tuitionAmount = Number(studentData.termFee) || 5000;
     this.data.fees[id] = {
-      total: 8000,
+      total: tuitionAmount,
       paid: 0,
-      due: 8000,
+      due: tuitionAmount,
       items: [
-        { id: 'FEE-1', name: 'Tuition Fee (Term 2)', amount: 5000, status: 'Due', dueDate: '20 Nov 2026' },
-        { id: 'FEE-2', name: 'Development & Sports Fee', amount: 1500, status: 'Due', dueDate: '20 Nov 2026' },
-        { id: 'FEE-3', name: 'Term Fee Balance', amount: 1500, status: 'Due', dueDate: '20 Nov 2026' }
+        { id: 'FEE-1', name: 'Academic Tuition Fee', amount: tuitionAmount, status: 'Due', dueDate: '20 Nov 2026' }
       ],
       paymentHistory: [],
       admitEligibility: 'Not Eligible',
-      admitEligibleReason: 'Pending balance ₹8,000'
+      admitEligibleReason: `Pending fee balance ₹${tuitionAmount.toLocaleString('en-IN')}`
     };
 
     this.save();
     return newStudent;
+  }
+
+  // Register Teacher / Staff (Admin)
+  addStaff(staffData) {
+    const id = 'TCH-' + Math.floor(100 + Math.random() * 900);
+    const newTeacher = {
+      id,
+      name: staffData.name,
+      subject: staffData.subject || 'General Studies',
+      assignedClasses: staffData.assignedClasses && staffData.assignedClasses.length ? staffData.assignedClasses : ['Class VIII-B'],
+      isClassTeacher: staffData.isClassTeacher || null,
+      phone: staffData.phone || '',
+      email: staffData.email || '',
+      room: staffData.room || 'Faculty Room 1',
+      avatar: staffData.avatar || '👨‍🏫'
+    };
+
+    if (!this.data.users.teachers) this.data.users.teachers = [];
+    this.data.users.teachers.push(newTeacher);
+
+    if (!this.data.activeTeacherId) {
+      this.data.activeTeacherId = id;
+    }
+
+    this.save();
+    return newTeacher;
   }
 }
 
