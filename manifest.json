@@ -1,0 +1,26 @@
+{
+  "name": "SchoolHub — School Management System",
+  "short_name": "SchoolHub",
+  "id": "com.schoolhub.app",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f8fb",
+  "theme_color": "#124e7f",
+  "description": "Unified school management system for students, parents, teachers, and school administrators.",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "./assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

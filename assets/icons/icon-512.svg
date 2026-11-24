@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#147fc1"/>
+      <stop offset="100%" stop-color="#0f3b64"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd54f"/>
+      <stop offset="100%" stop-color="#ff9800"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Background rounded squircle -->
+  <rect width="512" height="512" rx="128" fill="url(#blueGrad)"/>
+
+  <!-- Subtle overlay glow -->
+  <circle cx="120" cy="100" r="180" fill="#ffffff" opacity="0.08"/>
+
+  <!-- Schoolhouse / Academic Icon -->
+  <g transform="translate(86, 96)" filter="url(#shadow)">
+    <!-- Roof / Gable -->
+    <polygon points="170,30 20,130 320,130" fill="#ffffff"/>
+    
+    <!-- Dome / Flagpole -->
+    <path d="M170,30 L170,0 M170,0 L205,12 L170,24" stroke="url(#goldGrad)" stroke-width="6" fill="url(#goldGrad)"/>
+    
+    <!-- Building base -->
+    <rect x="40" y="130" width="260" height="170" rx="12" fill="#ffffff"/>
+    
+    <!-- Columns -->
+    <rect x="65" y="150" width="24" height="120" rx="4" fill="#147fc1"/>
+    <rect x="115" y="150" width="24" height="120" rx="4" fill="#147fc1"/>
+    <rect x="201" y="150" width="24" height="120" rx="4" fill="#147fc1"/>
+    <rect x="251" y="150" width="24" height="120" rx="4" fill="#147fc1"/>
+
+    <!-- Central Arch Door -->
+    <path d="M148,270 L148,190 A22,22 0 0,1 192,190 L192,270 Z" fill="#0f3b64"/>
+
+    <!-- Academic Star / Crest -->
+    <circle cx="170" cy="95" r="18" fill="url(#goldGrad)"/>
+  </g>
+
+  <!-- App Title Banner -->
+  <text x="256" y="445" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="44" fill="#ffffff" text-anchor="middle" letter-spacing="2">SCHOOLHUB</text>
+</svg>

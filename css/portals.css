@@ -1,0 +1,495 @@
+/**
+ * SchoolHub - Portal Specific Views & Theming
+ */
+
+/* Welcome Cards */
+.welcome-card {
+  background: linear-gradient(115deg, #147fc1 0%, #23b9d9 100%);
+  color: #ffffff;
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 8px 24px rgba(20, 127, 193, 0.2);
+  margin-bottom: 18px;
+}
+
+.welcome-card.teacher-theme {
+  background: linear-gradient(115deg, #0e639c 0%, #1680a6 100%);
+}
+
+.welcome-card.admin-theme {
+  background: linear-gradient(115deg, #124e7f 0%, #1d72b8 100%);
+}
+
+.welcome-text h2 {
+  color: #ffffff;
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.welcome-text p {
+  color: #e6f6ff;
+  font-size: 13.5px;
+}
+
+.student-tag {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* Quick Nav Buttons on Dashboard */
+.quick-nav-strip {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.quick-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-main);
+  box-shadow: var(--shadow-subtle);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.quick-btn:hover {
+  border-color: var(--primary-blue);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+
+.q-icon {
+  font-size: 24px;
+}
+
+/* Periods / Timetable Item */
+.period-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.period-item {
+  display: grid;
+  grid-template-columns: 85px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.period-item:last-child {
+  border-bottom: 0;
+}
+
+.period-item.is-break {
+  background: #fdfcf7;
+  border-radius: var(--radius-sm);
+  padding: 10px 8px;
+}
+
+.period-time {
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.period-time strong {
+  display: block;
+  color: var(--text-main);
+  font-size: 12.5px;
+}
+
+.period-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.period-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #e9f4fc;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+}
+
+.period-title {
+  font-weight: 700;
+  font-size: 13.5px;
+}
+
+.period-teacher {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Homework Cards */
+.homework-card {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 12px;
+  background: #fafcfd;
+}
+
+.hw-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.attachment-pill {
+  margin: 10px 0;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.btn-text {
+  background: transparent;
+  border: 0;
+  color: var(--primary-blue);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.homework-item-box {
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 18px 0;
+}
+
+.homework-item-box:last-child {
+  border-bottom: 0;
+}
+
+.hw-desc {
+  font-size: 13px;
+  color: #334155;
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+.submission-status-card {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  margin-top: 10px;
+}
+
+.teacher-feedback-box {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #86efac;
+  font-size: 12px;
+  color: #166534;
+}
+
+/* Calendar Grid */
+.calendar-legend {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 11.5px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-box {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.legend-box.green { background: #bbf7d0; border: 1px solid #86efac; }
+.legend-box.red { background: #fecaca; border: 1px solid #f87171; }
+.legend-box.amber { background: #fef08a; border: 1px solid #facc15; }
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  background: #f8fafc;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cal-day:hover:not(.head):not(.empty) {
+  border-color: var(--primary-blue);
+  box-shadow: var(--shadow-subtle);
+}
+
+.cal-day.head {
+  background: transparent;
+  border: none;
+  aspect-ratio: auto;
+  padding: 4px;
+  color: var(--text-muted);
+  font-size: 11px;
+  cursor: default;
+}
+
+.cal-day.empty {
+  background: transparent;
+  border: none;
+  cursor: default;
+}
+
+.cal-day.present {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.cal-day.absent {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #991b1b;
+}
+
+.cal-day.leave {
+  background: #fef9c3;
+  border-color: #fde047;
+  color: #854d0e;
+}
+
+.day-badge {
+  font-size: 9px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: rgba(0,0,0,0.06);
+}
+
+/* Wards & Profile */
+.profile-header-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.profile-avatar-large {
+  width: 68px;
+  height: 68px;
+  border-radius: var(--radius-md);
+  background: #e0f2fe;
+  display: grid;
+  place-items: center;
+  font-size: 32px;
+}
+
+.profile-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid var(--border-subtle);
+  margin: 18px 0;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.info-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.wards-list {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ward-item {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 240px;
+  flex: 1;
+}
+
+.ward-item.active-ward {
+  border-color: var(--primary-blue);
+  background: #f0f9ff;
+}
+
+.ward-avatar {
+  font-size: 28px;
+}
+
+/* Services Grid */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.service-box .service-icon {
+  font-size: 26px;
+  margin-bottom: 6px;
+}
+
+.mini-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.mini-item:last-child {
+  border-bottom: 0;
+}
+
+/* Payment summary box */
+.payment-summary-box {
+  background: #f8fafc;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-top: 10px;
+}
+
+.row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 13px;
+}
+
+.payment-options-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.pay-opt-card {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  text-align: center;
+}
+
+.pay-opt-card input {
+  margin-bottom: 2px;
+}
+
+/* Messages */
+.messages-stream {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding: 10px 0;
+}
+
+.message-bubble {
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  max-width: 80%;
+  font-size: 13px;
+}
+
+.message-bubble.incoming {
+  background: #f1f5f9;
+  align-self: flex-start;
+}
+
+.message-bubble.outgoing {
+  background: #e0f2fe;
+  color: #0369a1;
+  align-self: flex-end;
+}
+
+.msg-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+@media (max-width: 720px) {
+  .welcome-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 18px;
+  }
+  .quick-nav-strip {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .quick-btn {
+    padding: 10px 4px;
+    font-size: 10px;
+  }
+  .q-icon {
+    font-size: 19px;
+  }
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  .payment-options-grid {
+    grid-template-columns: 1fr;
+  }
+}

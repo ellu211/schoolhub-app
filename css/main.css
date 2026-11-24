@@ -1,0 +1,129 @@
+/**
+ * SchoolHub - Core Styles & Design Tokens
+ */
+
+:root {
+  /* Brand Theme Colors */
+  --primary-blue: #147fc1;
+  --primary-deep: #103b65;
+  --primary-dark: #124e7f;
+  --primary-cyan: #20b7dc;
+  --accent-teal: #0d9488;
+  
+  /* Semantic Status */
+  --color-success: #16804e;
+  --bg-success: #e7f7ee;
+  --color-danger: #c44c56;
+  --bg-danger: #fff0f0;
+  --color-warning: #b45309;
+  --bg-warning: #fef3c7;
+  --color-info: #0284c7;
+  --bg-info: #e0f2fe;
+
+  /* Neutrals */
+  --bg-app: #f4f8fb;
+  --bg-card: #ffffff;
+  --text-main: #19334d;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --border-subtle: #e2e8f0;
+  --border-light: #cbd5e1;
+
+  /* Shadows & Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --shadow-subtle: 0 2px 8px rgba(18, 78, 127, 0.04);
+  --shadow-card: 0 4px 14px rgba(18, 78, 127, 0.07);
+  --shadow-float: 0 12px 30px rgba(16, 59, 101, 0.15);
+
+  /* Typography */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-sans);
+  background: var(--bg-app);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg-app);
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--primary-blue);
+  text-decoration: none;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.25;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.small {
+  font-size: 12px;
+}
+
+.monospace {
+  font-family: var(--font-mono);
+}
+
+.color-green { color: var(--color-success) !important; }
+.color-red { color: var(--color-danger) !important; }
+.color-amber { color: var(--color-warning) !important; }
+.color-blue { color: var(--primary-blue) !important; }
+
+.cursor-pointer { cursor: pointer; }
+
+/* Animation utilities */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+/* Offline banner */
+.offline-banner {
+  display: none;
+  background: #f97316;
+  color: white;
+  text-align: center;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.offline-banner.is-offline {
+  display: block;
+}

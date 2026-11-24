@@ -1,0 +1,31 @@
+{
+  "name": "schoolhub-app",
+  "version": "1.0.0",
+  "description": "Unified School Management System for Student, Parent, Teacher, and Administration — Production App & Google Play Ready",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8080",
+    "serve": "npx serve -l 8080 .",
+    "build:cap": "npx cap copy && npx cap sync",
+    "android:open": "npx cap open android",
+    "android:build": "npx cap build android",
+    "pwa:validate": "npx lighthouse-ci collect --url=http://localhost:8080"
+  },
+  "keywords": [
+    "school-management",
+    "education",
+    "pwa",
+    "capacitor",
+    "playstore",
+    "attendance",
+    "fees",
+    "homework"
+  ],
+  "author": "SchoolHub Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/android": "^6.1.2"
+  }
+}

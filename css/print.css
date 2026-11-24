@@ -1,0 +1,54 @@
+/**
+ * SchoolHub - Print Stylesheet
+ */
+
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-family: system-ui, Arial, sans-serif !important;
+    margin: 0 !important;
+    padding: 10mm !important;
+  }
+
+  .app-sidebar,
+  .mobile-bottom-nav,
+  .topbar,
+  .offline-banner,
+  .toast-container,
+  .btn,
+  button {
+    display: none !important;
+  }
+
+  .print-doc {
+    width: 100% !important;
+    max-width: 100% !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .doc-header {
+    text-align: center;
+    border-bottom: 2px solid #000;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+  }
+
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+  }
+
+  .doc-table th, .doc-table td {
+    border: 1px solid #333 !important;
+    padding: 8px 10px;
+  }
+
+  .doc-badge-green, .doc-title-badge {
+    border: 1px solid #000 !important;
+    color: #000 !important;
+  }
+}
